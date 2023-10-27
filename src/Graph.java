@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class Graph {
@@ -40,6 +42,27 @@ public class Graph {
 
     public ArrayList<Node> getNeighbours(Node node){
         return node.getNeighbours();
+    }
+
+    public ArrayList<Node> breadthFirstSearch(){
+        ArrayList<Node> results = new ArrayList<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(nodes.get(0));
+
+        while (!queue.isEmpty()){
+            Node currentNode = queue.poll();
+            if (!results.contains(currentNode)){
+                results.add(currentNode);
+            }
+            for (Node neighbour: currentNode.getNeighbours()){
+                if (!results.contains(neighbour)){
+                    queue.add(neighbour);
+                }
+            }
+        }
+
+
+        return results;
     }
 
     public ArrayList<Node> depthFirstSearch(){

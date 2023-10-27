@@ -33,7 +33,7 @@ public class Pathfinding {
 
         graph.displayGraph();
 
-        for (Node node: graph.depthFirstSearch()){
+        for (Node node: graph.breadthFirstSearch()){
             System.out.println(node.getName());
         }
 
