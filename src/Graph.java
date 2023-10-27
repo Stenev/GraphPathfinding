@@ -53,22 +53,16 @@ public class Graph {
             Node currentNode = queue.poll();
             if (!results.contains(currentNode)){
                 results.add(currentNode);
-            }
-            for (Node neighbour: currentNode.getNeighbours()){
-                if (!results.contains(neighbour)){
-                    queue.add(neighbour);
-                }
+                queue.addAll(currentNode.getNeighbours());
             }
         }
-
-
         return results;
     }
 
     public ArrayList<Node> depthFirstSearch(){
         ArrayList<Node> results = new ArrayList<>();
         Stack<Node> stack = new Stack<>();
-        stack.push(nodes.get(7));
+        stack.push(nodes.get(0));
 
         while (!stack.empty()){
             Node currentNode = stack.pop();
