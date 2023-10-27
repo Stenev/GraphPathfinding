@@ -4,7 +4,7 @@ import java.util.HashMap;
 public class Node {
 
     private final String name;
-    private ArrayList<Node> neighbours;
+    private final ArrayList<Node> neighbours;
 
 
     public Node(String name){
@@ -25,5 +25,4 @@ public class Node {
     public ArrayList<Node> getNeighbours(){
         return neighbours;
     }
-
 }

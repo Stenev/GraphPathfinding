@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Graph {
 
-    private ArrayList<Node> nodes;
+    private final ArrayList<Node> nodes;
 
     public Graph(){
         this.nodes = new ArrayList<>();
@@ -35,13 +36,32 @@ public class Graph {
         } else {
             System.out.println("Invalid nodes, can't add edge");
         }
-
-
     }
 
     public ArrayList<Node> getNeighbours(Node node){
         return node.getNeighbours();
     }
+
+    public ArrayList<Node> depthFirstSearch(){
+        ArrayList<Node> results = new ArrayList<>();
+        Stack<Node> stack = new Stack<>();
+        stack.push(nodes.get(7));
+
+        while (!stack.empty()){
+            Node currentNode = stack.pop();
+            if (!results.contains(currentNode)){
+                results.add(currentNode);
+                for (Node neighbour: currentNode.getNeighbours()){
+                    if (!results.contains(neighbour)){
+                        stack.push(neighbour);
+                    }
+                }
+            }
+         }
+
+        return results;
+    }
+
 
     public void displayGraph(){
         for (Node node: nodes){
@@ -51,6 +71,6 @@ public class Graph {
             }
             System.out.println(nodeDetails);
         }
+        System.out.println();
     }
-
 }

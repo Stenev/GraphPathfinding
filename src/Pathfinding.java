@@ -24,14 +24,18 @@ public class Pathfinding {
         graph.addEdge("London", "Reading");
         graph.addEdge("London", "Bournemouth");
         graph.addEdge("Bournemouth", "Plymouth");
-        graph.addEdge("Bournemouth", "Reading");
+        //graph.addEdge("Bournemouth", "Reading");
         graph.addEdge("Plymouth", "Bristol");
         graph.addEdge("Bristol", "Bath");
         graph.addEdge("Bath", "Swindon");
-        graph.addEdge("Bath", "Bournemouth");
-        graph.addEdge("Bath", "Reading");
+        //graph.addEdge("Bath", "Bournemouth");
+        //graph.addEdge("Bath", "Reading");
 
         graph.displayGraph();
+
+        for (Node node: graph.depthFirstSearch()){
+            System.out.println(node.getName());
+        }
 
 
 
