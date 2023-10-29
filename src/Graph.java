@@ -1,4 +1,9 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Stack;
+import java.util.Map;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Graph {
 
@@ -37,16 +42,65 @@ public class Graph {
         }
     }
 
-    public Map<Node, Integer> getNeighbours(Node node){
-        return node.getNeighbours();
-    }
-
-    public ArrayList<Node> dijkstraPath(){
-
+    public Node getNodeByName(String name){
+            for (Node node: nodes){
+                if (node.getName().equals(name)){
+                   return node;
+                }
+            }
         return null;
     }
 
+    public ArrayList<Node> dijkstraPath(String _startNode, String _endNode){
+        ArrayList<Node> results = new ArrayList<>();
 
+        ArrayList<Node> closed = new ArrayList<>();
+        ArrayList<Node> open = new ArrayList<>(nodes);
+        Node startNode = getNodeByName(_startNode);
+        Node endNode = getNodeByName(_endNode);
+        Node currentNode = null;
+
+        startNode.setPathValue(0);
+        int currentPathValue;
+
+        while (!closed.contains(endNode)){
+            int minPathValue = Integer.MAX_VALUE;
+            for (Node node: open){
+                currentPathValue = node.getPathValue();
+                if (currentPathValue < minPathValue){
+                    currentNode = node;
+                    minPathValue = currentPathValue;
+                }
+            }
+
+            open.remove(currentNode);
+            closed.add(currentNode);
+
+            int combinedPathValue;
+            if (currentNode != endNode){
+                for (Map.Entry<Node, Integer> neighbour: currentNode.getNeighbours().entrySet()){
+                    if (open.contains(neighbour.getKey())){
+                        Node neighbourNode = neighbour.getKey();
+                        int edgeWeight = neighbour.getValue();
+                        combinedPathValue = currentNode.getPathValue() + edgeWeight;
+                        if (combinedPathValue < neighbourNode.getPathValue()){
+                            neighbourNode.setPathValue(combinedPathValue);
+                            neighbourNode.setPrevious(currentNode);
+                        }
+                    }
+                }
+            }
+        }
+
+        currentNode = endNode;
+        while (currentNode != null){
+            results.add(currentNode);
+            currentNode = currentNode.getPrevious();
+        }
+
+        Collections.reverse(results);
+        return results;
+    }
 
     public ArrayList<Node> breadthFirstSearch(){
         ArrayList<Node> results = new ArrayList<>();
@@ -79,10 +133,8 @@ public class Graph {
                 }
             }
          }
-
         return results;
     }
-
 
     public void displayGraph(){
         for (Node node: nodes){

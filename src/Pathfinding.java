@@ -1,3 +1,4 @@
+
 public class Pathfinding {
 
     public static void main(String[] args){
@@ -36,8 +37,11 @@ public class Pathfinding {
         for (Node node: graph.breadthFirstSearch()){
             System.out.println(node.getName());
         }
+        System.out.println("\n\n");
 
-
+        for (Node node: graph.dijkstraPath("Oxford", "Plymouth")){
+            System.out.println(node.getName());
+        }
 
     }
 }

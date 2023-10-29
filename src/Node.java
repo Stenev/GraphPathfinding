@@ -1,4 +1,3 @@
-//import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -6,11 +5,14 @@ public class Node {
 
     private final String name;
     private final Map<Node, Integer> neighbours;
+    private Integer pathValue;
+    private Node previous;
 
 
     public Node(String name){
         this.name = name;
-        neighbours = new HashMap<>();
+        this.neighbours = new HashMap<>();
+        this.pathValue = Integer.MAX_VALUE;
     }
 
     public void addNeighbour(Node node, int weight){
@@ -24,6 +26,22 @@ public class Node {
     }
 
     public Map<Node, Integer> getNeighbours(){
-        return neighbours;
+        return this.neighbours;
+    }
+
+    public Node getPrevious(){
+        return this.previous;
+    }
+
+    public void setPrevious(Node previous){
+        this.previous = previous;
+    }
+
+    public Integer getPathValue(){
+        return this.pathValue;
+    }
+
+    public void setPathValue(Integer pathValue){
+        this.pathValue = pathValue;
     }
 }
