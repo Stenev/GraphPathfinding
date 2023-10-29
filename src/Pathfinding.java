@@ -18,18 +18,18 @@ public class Pathfinding {
             graph.addNode(new Node(station));
         }
 
-        graph.addEdge("Oxford", "London");
-        graph.addEdge("Oxford", "Reading");
-        graph.addEdge("Oxford", "Bath");
-        graph.addEdge("London", "Reading");
-        graph.addEdge("London", "Bournemouth");
-        graph.addEdge("Bournemouth", "Plymouth");
-        //graph.addEdge("Bournemouth", "Reading");
-        graph.addEdge("Plymouth", "Bristol");
-        graph.addEdge("Bristol", "Bath");
-        graph.addEdge("Bath", "Swindon");
-        //graph.addEdge("Bath", "Bournemouth");
-        //graph.addEdge("Bath", "Reading");
+        graph.addEdge("Oxford", "London", 60);
+        graph.addEdge("Oxford", "Reading", 25);
+        graph.addEdge("Oxford", "Bath", 75);
+        graph.addEdge("London", "Reading", 40);
+        graph.addEdge("London", "Bournemouth", 110);
+        graph.addEdge("Bournemouth", "Plymouth", 95);
+        graph.addEdge("Bournemouth", "Reading", 95);
+        graph.addEdge("Plymouth", "Bristol", 50);
+        graph.addEdge("Bristol", "Bath", 12);
+        graph.addEdge("Bath", "Swindon", 35);
+        graph.addEdge("Bath", "Bournemouth", 50);
+        graph.addEdge("Bath", "Reading", 65);
 
         graph.displayGraph();
 

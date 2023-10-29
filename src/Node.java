@@ -1,20 +1,21 @@
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Node {
 
     private final String name;
-    private final ArrayList<Node> neighbours;
+    private final Map<Node, Integer> neighbours;
 
 
     public Node(String name){
         this.name = name;
-        neighbours = new ArrayList<>();
+        neighbours = new HashMap<>();
     }
 
-    public void addNeighbour(Node node){ //, int weight){
-        if (!neighbours.contains(node)) {
-            neighbours.add(node); //, weight);
+    public void addNeighbour(Node node, int weight){
+        if (!neighbours.containsKey(node)) {
+            neighbours.put(node, weight);
         }
     }
 
@@ -22,7 +23,7 @@ public class Node {
         return this.name;
     }
 
-    public ArrayList<Node> getNeighbours(){
+    public Map<Node, Integer> getNeighbours(){
         return neighbours;
     }
 }

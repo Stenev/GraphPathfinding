@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 public class Graph {
 
@@ -15,12 +12,12 @@ public class Graph {
         nodes.add(node);
     }
 
-    public void addEdge(Node node1, Node node2){
-        node1.addNeighbour(node2);
-        node2.addNeighbour(node1);
+    public void addEdge(Node node1, Node node2, int weight){
+        node1.addNeighbour(node2, weight);
+        node2.addNeighbour(node1, weight);
     }
 
-    public void addEdge(String nodeS1, String nodeS2){
+    public void addEdge(String nodeS1, String nodeS2, int weight){
         Node node1 = null;
         Node node2 = null;
 
@@ -34,15 +31,22 @@ public class Graph {
         }
 
         if (node1 != null && node2 != null){
-            addEdge(node1, node2);
+            addEdge(node1, node2, weight);
         } else {
             System.out.println("Invalid nodes, can't add edge");
         }
     }
 
-    public ArrayList<Node> getNeighbours(Node node){
+    public Map<Node, Integer> getNeighbours(Node node){
         return node.getNeighbours();
     }
+
+    public ArrayList<Node> dijkstraPath(){
+
+        return null;
+    }
+
+
 
     public ArrayList<Node> breadthFirstSearch(){
         ArrayList<Node> results = new ArrayList<>();
@@ -53,7 +57,7 @@ public class Graph {
             Node currentNode = queue.poll();
             if (!results.contains(currentNode)){
                 results.add(currentNode);
-                queue.addAll(currentNode.getNeighbours());
+                queue.addAll(currentNode.getNeighbours().keySet());
             }
         }
         return results;
@@ -68,7 +72,7 @@ public class Graph {
             Node currentNode = stack.pop();
             if (!results.contains(currentNode)){
                 results.add(currentNode);
-                for (Node neighbour: currentNode.getNeighbours()){
+                for (Node neighbour: currentNode.getNeighbours().keySet()){
                     if (!results.contains(neighbour)){
                         stack.push(neighbour);
                     }
@@ -83,7 +87,7 @@ public class Graph {
     public void displayGraph(){
         for (Node node: nodes){
             StringBuilder nodeDetails = new StringBuilder(node.getName() + ": ");
-            for (Node neighbour: node.getNeighbours()){
+            for (Node neighbour: node.getNeighbours().keySet()){
                 nodeDetails.append(neighbour.getName()).append(", ");
             }
             System.out.println(nodeDetails);
