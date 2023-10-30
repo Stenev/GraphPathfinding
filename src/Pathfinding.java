@@ -1,7 +1,32 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.stream.Stream;
+
 
 public class Pathfinding {
 
-    public static void main(String[] args){
+    // Advent of Code 2022 - Day 12 - Hill Climbing Algorithm
+    public static void main(String[] args) throws IOException {
+        String fileName = "C:\\Dev\\Java\\Text_files\\input2.txt";
+        File file = new File(fileName);
+        ArrayList<String> inputLines = new ArrayList<>();
+
+        try (Stream<String> linesStream = Files.lines(file.toPath())) {
+            linesStream.forEach(inputLines::add);
+        }
+
+        for (String line: inputLines){
+            System.out.println("Current line: " + line);
+        }
+
+
+    }
+
+
+
+    public static void graphDemo(String[] args){
         String[] stations = {
                 "Oxford",
                 "London",

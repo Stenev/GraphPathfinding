@@ -62,9 +62,10 @@ public class Graph {
 
         startNode.setPathValue(0);
         int currentPathValue;
+        int minPathValue;
 
         while (!closed.contains(endNode)){
-            int minPathValue = Integer.MAX_VALUE;
+            minPathValue = Integer.MAX_VALUE;
             for (Node node: open){
                 currentPathValue = node.getPathValue();
                 if (currentPathValue < minPathValue){
