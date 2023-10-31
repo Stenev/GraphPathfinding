@@ -7,17 +7,21 @@ import java.util.Queue;
 
 public class Graph {
 
-    private final ArrayList<ArrayList<Node>> allNodes;
+    private final ArrayList<ArrayList<Node>> nodesList;
     private final ArrayList<Node> nodes;
     private int numberOfNodes;
 
     public Graph(){
         this.nodes = new ArrayList<>();
-        this.allNodes = new ArrayList<>();
+        this.nodesList = new ArrayList<>();
     }
 
-    public ArrayList<ArrayList<Node>> getAllNodes(){
-        return this.allNodes;
+    public ArrayList<ArrayList<Node>> getNodesList(){
+        return this.nodesList;
+    }
+
+    public ArrayList<Node> getNodes(){
+        return this.nodes;
     }
 
     public void addNode(Node node){
@@ -60,15 +64,23 @@ public class Graph {
         return null;
     }
 
+    public void resetGraph(){
+        for (Node node: nodes){
+            node.setPrevious(null);
+            node.setPathValue(Integer.MAX_VALUE);
+            node.clearNeighbours();
+        }
+    }
+
     public void findAndSetNeighbours(Node node){
         int northRow;
         int southRow;
         int westCol;
         int eastCol;
-        int listLength = allNodes.size();
+        int listLength = nodesList.size();
         int row = node.getRow();
         int col  = node.getColumn();
-        ArrayList<Node> currentRow = allNodes.get(0);
+        ArrayList<Node> currentRow = nodesList.get(0);
 
 
         if (row == 0){
@@ -93,20 +105,19 @@ public class Graph {
             eastCol = col+1;
         }
 
-        int[] rowColDetails = {row, col, northRow, southRow, eastCol, westCol};
         ArrayList<Node> neighbours = new ArrayList<>();
-
         Node[] neighbourNodes = new Node[4];
         // n, s, e, w
-        neighbourNodes[0] = allNodes.get(northRow).get(col);
-        neighbourNodes[1] = allNodes.get(southRow).get(col);
-        neighbourNodes[2] = allNodes.get(row).get(eastCol);
-        neighbourNodes[3] = allNodes.get(row).get(westCol);
+        neighbourNodes[0] = nodesList.get(northRow).get(col);
+        neighbourNodes[1] = nodesList.get(southRow).get(col);
+        neighbourNodes[2] = nodesList.get(row).get(eastCol);
+        neighbourNodes[3] = nodesList.get(row).get(westCol);
 
         for (Node neighbour: neighbourNodes){
             int nodeHeight = node.getHeight();
             int neighbourHeight = neighbour.getHeight();
-            if (!(neighbourHeight - nodeHeight > 1)){
+            if (!(neighbourHeight - nodeHeight > 1)){ // forward
+            //if (!(nodeHeight - neighbourHeight > 1)){ // reverse
                 if (neighbour.getId() != node.getId()) {
                     neighbours.add(neighbour);
                 }
@@ -114,16 +125,17 @@ public class Graph {
         }
 
         for (Node neighbour: neighbours){
-            addEdge(node, neighbour, 1);
+            node.addNeighbour(neighbour, 1);
         }
     }
 
-    public ArrayList<Node> dijkstraPath(String _startNode, String _endNode){
+
+    public ArrayList<Node> dijkstraPath(Node startNode, String _endNode){
+        resetGraph();
         ArrayList<Node> path = new ArrayList<>();
 
         ArrayList<Node> closed = new ArrayList<>();
         ArrayList<Node> open = new ArrayList<>(nodes);
-        Node startNode = getNodeByName(_startNode);
         Node endNode = getNodeByName(_endNode);
         Node currentNode = null;
 
@@ -141,7 +153,8 @@ public class Graph {
                 }
             }
 
-            System.out.println("Current Node: " + currentNode.getName() + ", ID: " + currentNode.getId());
+            //System.out.println("Current Node: " + currentNode.getName() + ", ID: " + currentNode.getId());
+            System.out.println(open.size());
 
             open.remove(currentNode);
             closed.add(currentNode);
@@ -173,14 +186,21 @@ public class Graph {
         return path;
     }
 
-    public ArrayList<Node> breadthFirstSearch(){
+    /**
+     *
+     * @param node the starting node
+     * @return list of nodes in the search
+     */
+    public ArrayList<Node> breadthFirstSearch(Node node){
+        resetGraph();
         ArrayList<Node> results = new ArrayList<>();
         Queue<Node> queue = new LinkedList<>();
-        queue.add(nodes.get(0));
+        queue.add(node);
 
         while (!queue.isEmpty()){
             Node currentNode = queue.poll();
             if (!results.contains(currentNode)){
+                findAndSetNeighbours(currentNode);
                 results.add(currentNode);
                 queue.addAll(currentNode.getNeighbours().keySet());
             }
@@ -189,6 +209,7 @@ public class Graph {
     }
 
     public ArrayList<Node> depthFirstSearch(){
+        resetGraph();
         ArrayList<Node> results = new ArrayList<>();
         Stack<Node> stack = new Stack<>();
         stack.push(nodes.get(0));
@@ -196,6 +217,7 @@ public class Graph {
         while (!stack.empty()){
             Node currentNode = stack.pop();
             if (!results.contains(currentNode)){
+                findAndSetNeighbours(currentNode);
                 results.add(currentNode);
                 for (Node neighbour: currentNode.getNeighbours().keySet()){
                     if (!results.contains(neighbour)){

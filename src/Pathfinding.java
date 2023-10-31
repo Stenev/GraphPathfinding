@@ -7,8 +7,6 @@ import java.util.stream.Stream;
 
 public class Pathfinding {
 
-
-
     // Advent of Code 2022 - Day 12 - Hill Climbing Algorithm
     public static void main(String[] args) throws IOException {
         long startTime = System.currentTimeMillis();
@@ -20,10 +18,7 @@ public class Pathfinding {
             linesStream.forEach(inputLines::add);
         }
 
-//        for (String line: inputLines){
-//            System.out.println("Current line: " + line);
-//        }
-
+        // Add nodes to graph
         Graph graph = new Graph();
 
         for (String line: inputLines){
@@ -37,49 +32,75 @@ public class Pathfinding {
                 currentNodes.add(newNode);
                 graph.addNode(newNode);
             }
-            graph.getAllNodes().add(currentNodes);
+            graph.getNodesList().add(currentNodes);
         }
 
-//        System.out.println(allNodes.get(0).size());
-//
-//        for (Node node: allNodes.get(0)){
-//            System.out.println("Name: " + node.getName() + " Value: " + node.getHeight());
-//        }
 
-
-        for (int row=0; row<graph.getAllNodes().size(); row++){
-            for (int col=0; col<graph.getAllNodes().get(0).size(); col++){
-                graph.getAllNodes().get(row).get(col).setRowColumn(row, col);
+        // Set node x, y
+        for (int row = 0; row<graph.getNodesList().size(); row++){
+            for (int col = 0; col<graph.getNodesList().get(0).size(); col++){
+                Node currentNode = graph.getNodesList().get(row).get(col);
+                currentNode.setRowColumn(row, col);
             }
         }
 
 
+        // set starting points
+        ArrayList<Node> startPoints = new ArrayList<>();
+        for (int row = 0; row<graph.getNodesList().size(); row++) {
+            for (int col = 0; col < graph.getNodesList().get(0).size(); col++) {
+                Node currentNode = graph.getNodesList().get(row).get(col);
+                if (currentNode.getName().equals("a") && validPath(graph, currentNode)){
+                    startPoints.add(currentNode);
+                }
+            }
+        }
 
-        graph.displayGraph();
-        ArrayList<Node> path = graph.dijkstraPath("S", "E");
+        // find shortest path from starting points
+        int pathLength;
+        ArrayList<Node> shortestPath = new ArrayList<>();
+        int minPathLength = Integer.MAX_VALUE;
+
+        for (Node node: startPoints) {
+            ArrayList<Node> path = graph.dijkstraPath(node, "E");
+            pathLength = path.size();
+            if (pathLength <= minPathLength){
+                minPathLength = pathLength;
+                shortestPath = path;
+            }
+        }
+
+        //graph.resetGraph();
+        //shortestPath = graph.dijkstraPath(graph.getNodeByName("S"), "E");
         StringBuilder pathStr = new StringBuilder();
-        for (Node node: path){
+        for (Node node: shortestPath){
             pathStr.append(node.getName());
             pathStr.append(", ");
         }
-        long endTime = System.currentTimeMillis();
-        long timeSec = (long) ((endTime - startTime) / 1000F);
-        long timeMin = (long) (timeSec / 60F);
 
+        System.out.println(pathStr);
+        System.out.println(shortestPath.size()-1);
+
+
+        long endTime = System.currentTimeMillis();
         System.out.println("Total execution time (seconds): " + (endTime - startTime) / 1000F);
         System.out.println("Total execution time (minutes): " + ((endTime - startTime) / 1000F) / 60F);
-        System.out.println(pathStr.toString());
-        System.out.println(path.size()-1);
     }
 
-    public static boolean validHeight(int nodeHeight, int neighbourHeight){
-        boolean tooHigh = neighbourHeight - nodeHeight > 1;
-        boolean tooLow = nodeHeight - neighbourHeight > 1;
-        return !(tooHigh || tooLow);
+
+    public static boolean validPath(Graph graph, Node startPoint){
+        ArrayList<Node> bfsPath = graph.breadthFirstSearch(startPoint);
+
+        for (Node node: bfsPath){
+            if (node.getName().equals("E")){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static int getAsciiValue(char character){
-        int value = (int) character;
+        int value = character;
 
         if (character == 'S'){
             value = 0;
@@ -93,8 +114,7 @@ public class Pathfinding {
     }
 
 
-
-    public static void graphDemo(String[] args){
+    public static void graphDemo(){
         String[] stations = {
                 "Oxford",
                 "London",
@@ -127,12 +147,14 @@ public class Pathfinding {
 
         graph.displayGraph();
 
-        for (Node node: graph.breadthFirstSearch()){
+
+
+        for (Node node: graph.breadthFirstSearch(graph.getNodes().get(0))){
             System.out.println(node.getName());
         }
         System.out.println("\n\n");
 
-        for (Node node: graph.dijkstraPath("Oxford", "Plymouth")){
+        for (Node node: graph.dijkstraPath(graph.getNodeByName("Oxford"), "Plymouth")){
             System.out.println(node.getName());
         }
 
