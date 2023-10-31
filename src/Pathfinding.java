@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class Pathfinding {
 
-    private static final ArrayList<ArrayList<Node>> allNodes = new ArrayList<>();
+
 
     // Advent of Code 2022 - Day 12 - Hill Climbing Algorithm
     public static void main(String[] args) throws IOException {
@@ -37,7 +37,7 @@ public class Pathfinding {
                 currentNodes.add(newNode);
                 graph.addNode(newNode);
             }
-            allNodes.add(currentNodes);
+            graph.getAllNodes().add(currentNodes);
         }
 
 //        System.out.println(allNodes.get(0).size());
@@ -47,48 +47,13 @@ public class Pathfinding {
 //        }
 
 
-        int northRow;
-        int southRow;
-        int westCol;
-        int eastCol;
-        int listLength = allNodes.size();
-
-        for (int row=0; row<listLength; row++){
-            ArrayList<Node> currentRow = allNodes.get(row);
-
-            for (int col=0; col<currentRow.size(); col++){
-                Node currentNode = allNodes.get(row).get(col);
-
-                if (row == 0){
-                    northRow = 0;
-                    southRow = 1;
-                } else if (row == listLength-1) {
-                    northRow = row-1;
-                    southRow = row;
-                } else {
-                    northRow = row-1;
-                    southRow = row+1;
-                }
-
-                if (col == 0){
-                    westCol = 0;
-                    eastCol = 1;
-                } else if (col == currentRow.size()-1){
-                    westCol = col-1;
-                    eastCol = col;
-                } else {
-                    westCol = col-1;
-                    eastCol = col+1;
-                }
-
-                int[] rowColDetails = {row, col, northRow, southRow, eastCol, westCol};
-                ArrayList<Node> neighbours = findNeighbours(currentNode, rowColDetails);
-                for (Node neighbour: neighbours){
-                    graph.addEdge(currentNode, neighbour, 1);
-                }
-
+        for (int row=0; row<graph.getAllNodes().size(); row++){
+            for (int col=0; col<graph.getAllNodes().get(0).size(); col++){
+                graph.getAllNodes().get(row).get(col).setRowColumn(row, col);
             }
         }
+
+
 
         graph.displayGraph();
         ArrayList<Node> path = graph.dijkstraPath("S", "E");
@@ -105,36 +70,6 @@ public class Pathfinding {
         System.out.println("Total execution time (minutes): " + ((endTime - startTime) / 1000F) / 60F);
         System.out.println(pathStr.toString());
         System.out.println(path.size()-1);
-    }
-
-
-    public static ArrayList<Node> findNeighbours(Node node, int[] rowColDetails){
-        int currentRow = rowColDetails[0];
-        int currentCol = rowColDetails[1];
-        int northRow = rowColDetails[2];
-        int southRow = rowColDetails[3];
-        int eastCol = rowColDetails[4];
-        int westCol = rowColDetails[5];
-
-        Node[] neighbourNodes = new Node[4];
-        // n, s, e, w
-        neighbourNodes[0] = allNodes.get(northRow).get(currentCol);
-        neighbourNodes[1] = allNodes.get(southRow).get(currentCol);
-        neighbourNodes[2] = allNodes.get(currentRow).get(eastCol);
-        neighbourNodes[3] = allNodes.get(currentRow).get(westCol);
-
-        ArrayList<Node> neighbours = new ArrayList<>();
-        for (Node neighbour: neighbourNodes){
-            int nodeHeight = node.getHeight();
-            int neighbourHeight = neighbour.getHeight();
-            if (validHeight(nodeHeight, neighbourHeight)){
-                if (neighbour.getId() != node.getId()) {
-                    neighbours.add(neighbour);
-                }
-            }
-
-        }
-        return neighbours;
     }
 
     public static boolean validHeight(int nodeHeight, int neighbourHeight){
