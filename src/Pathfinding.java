@@ -7,8 +7,6 @@ import java.util.stream.Stream;
 
 public class Pathfinding {
 
-
-
     // Advent of Code 2022 - Day 12 - Hill Climbing Algorithm
     public static void main(String[] args) throws IOException {
         long startTime = System.currentTimeMillis();
@@ -34,14 +32,14 @@ public class Pathfinding {
                 currentNodes.add(newNode);
                 graph.addNode(newNode);
             }
-            graph.getAllNodes().add(currentNodes);
+            graph.getNodesList().add(currentNodes);
         }
 
 
         // Set node x, y
-        for (int row=0; row<graph.getAllNodes().size(); row++){
-            for (int col=0; col<graph.getAllNodes().get(0).size(); col++){
-                Node currentNode = graph.getAllNodes().get(row).get(col);
+        for (int row = 0; row<graph.getNodesList().size(); row++){
+            for (int col = 0; col<graph.getNodesList().get(0).size(); col++){
+                Node currentNode = graph.getNodesList().get(row).get(col);
                 currentNode.setRowColumn(row, col);
             }
         }
@@ -49,9 +47,9 @@ public class Pathfinding {
 
         // set starting points
         ArrayList<Node> startPoints = new ArrayList<>();
-        for (int row=0; row<graph.getAllNodes().size(); row++) {
-            for (int col=0; col < graph.getAllNodes().get(0).size(); col++) {
-                Node currentNode = graph.getAllNodes().get(row).get(col);
+        for (int row = 0; row<graph.getNodesList().size(); row++) {
+            for (int col = 0; col < graph.getNodesList().get(0).size(); col++) {
+                Node currentNode = graph.getNodesList().get(row).get(col);
                 if (currentNode.getName().equals("a") && validPath(graph, currentNode)){
                     startPoints.add(currentNode);
                 }
@@ -85,9 +83,6 @@ public class Pathfinding {
 
 
         long endTime = System.currentTimeMillis();
-        long timeSec = (long) ((endTime - startTime) / 1000F);
-        long timeMin = (long) (timeSec / 60F);
-
         System.out.println("Total execution time (seconds): " + (endTime - startTime) / 1000F);
         System.out.println("Total execution time (minutes): " + ((endTime - startTime) / 1000F) / 60F);
     }
@@ -105,7 +100,7 @@ public class Pathfinding {
     }
 
     public static int getAsciiValue(char character){
-        int value = (int) character;
+        int value = character;
 
         if (character == 'S'){
             value = 0;

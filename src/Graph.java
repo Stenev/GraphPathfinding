@@ -7,17 +7,17 @@ import java.util.Queue;
 
 public class Graph {
 
-    private final ArrayList<ArrayList<Node>> allNodes;
+    private final ArrayList<ArrayList<Node>> nodesList;
     private final ArrayList<Node> nodes;
     private int numberOfNodes;
 
     public Graph(){
         this.nodes = new ArrayList<>();
-        this.allNodes = new ArrayList<>();
+        this.nodesList = new ArrayList<>();
     }
 
-    public ArrayList<ArrayList<Node>> getAllNodes(){
-        return this.allNodes;
+    public ArrayList<ArrayList<Node>> getNodesList(){
+        return this.nodesList;
     }
 
     public ArrayList<Node> getNodes(){
@@ -77,10 +77,10 @@ public class Graph {
         int southRow;
         int westCol;
         int eastCol;
-        int listLength = allNodes.size();
+        int listLength = nodesList.size();
         int row = node.getRow();
         int col  = node.getColumn();
-        ArrayList<Node> currentRow = allNodes.get(0);
+        ArrayList<Node> currentRow = nodesList.get(0);
 
 
         if (row == 0){
@@ -108,10 +108,10 @@ public class Graph {
         ArrayList<Node> neighbours = new ArrayList<>();
         Node[] neighbourNodes = new Node[4];
         // n, s, e, w
-        neighbourNodes[0] = allNodes.get(northRow).get(col);
-        neighbourNodes[1] = allNodes.get(southRow).get(col);
-        neighbourNodes[2] = allNodes.get(row).get(eastCol);
-        neighbourNodes[3] = allNodes.get(row).get(westCol);
+        neighbourNodes[0] = nodesList.get(northRow).get(col);
+        neighbourNodes[1] = nodesList.get(southRow).get(col);
+        neighbourNodes[2] = nodesList.get(row).get(eastCol);
+        neighbourNodes[3] = nodesList.get(row).get(westCol);
 
         for (Node neighbour: neighbourNodes){
             int nodeHeight = node.getHeight();
