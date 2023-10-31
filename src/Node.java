@@ -34,6 +34,10 @@ public class Node {
         this.column = column;
     }
 
+    public void clearNeighbours(){
+        this.neighbours.clear();
+    }
+
     public void addNeighbour(Node node, int weight){
         if (!neighbours.containsKey(node)) {
             neighbours.put(node, weight);

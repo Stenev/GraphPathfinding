@@ -20,6 +20,10 @@ public class Graph {
         return this.allNodes;
     }
 
+    public ArrayList<Node> getNodes(){
+        return this.nodes;
+    }
+
     public void addNode(Node node){
         node.setId(numberOfNodes);
         nodes.add(node);
@@ -93,7 +97,6 @@ public class Graph {
             eastCol = col+1;
         }
 
-        int[] rowColDetails = {row, col, northRow, southRow, eastCol, westCol};
         ArrayList<Node> neighbours = new ArrayList<>();
 
         Node[] neighbourNodes = new Node[4];
@@ -106,7 +109,8 @@ public class Graph {
         for (Node neighbour: neighbourNodes){
             int nodeHeight = node.getHeight();
             int neighbourHeight = neighbour.getHeight();
-            if (!(neighbourHeight - nodeHeight > 1)){
+            if (!(neighbourHeight - nodeHeight > 1)){ // forward
+            //if (!(nodeHeight - neighbourHeight > 1)){ // reverse
                 if (neighbour.getId() != node.getId()) {
                     neighbours.add(neighbour);
                 }
@@ -114,16 +118,17 @@ public class Graph {
         }
 
         for (Node neighbour: neighbours){
-            addEdge(node, neighbour, 1);
+            node.addNeighbour(neighbour, 1);
+            //addEdge(node, neighbour, 1);
         }
     }
 
-    public ArrayList<Node> dijkstraPath(String _startNode, String _endNode){
+
+    public ArrayList<Node> dijkstraPath(Node startNode, String _endNode){
         ArrayList<Node> path = new ArrayList<>();
 
         ArrayList<Node> closed = new ArrayList<>();
         ArrayList<Node> open = new ArrayList<>(nodes);
-        Node startNode = getNodeByName(_startNode);
         Node endNode = getNodeByName(_endNode);
         Node currentNode = null;
 
@@ -141,7 +146,7 @@ public class Graph {
                 }
             }
 
-            System.out.println("Current Node: " + currentNode.getName() + ", ID: " + currentNode.getId());
+            //System.out.println("Current Node: " + currentNode.getName() + ", ID: " + currentNode.getId());
 
             open.remove(currentNode);
             closed.add(currentNode);
@@ -173,10 +178,16 @@ public class Graph {
         return path;
     }
 
-    public ArrayList<Node> breadthFirstSearch(){
+    /**
+     *
+     * @param node the starting node
+     * @return list of nodes in the search
+     */
+    public ArrayList<Node> breadthFirstSearch(Node node){
         ArrayList<Node> results = new ArrayList<>();
         Queue<Node> queue = new LinkedList<>();
-        queue.add(nodes.get(0));
+        findAndSetNeighbours(node);
+        queue.add(node);
 
         while (!queue.isEmpty()){
             Node currentNode = queue.poll();

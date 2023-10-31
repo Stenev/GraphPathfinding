@@ -12,7 +12,7 @@ public class Pathfinding {
     // Advent of Code 2022 - Day 12 - Hill Climbing Algorithm
     public static void main(String[] args) throws IOException {
         long startTime = System.currentTimeMillis();
-        String fileName = "C:\\Dev\\Java\\Text_files\\input.txt";
+        String fileName = "C:\\Dev\\Java\\Text_files\\input2.txt";
         File file = new File(fileName);
         ArrayList<String> inputLines = new ArrayList<>();
 
@@ -20,10 +20,8 @@ public class Pathfinding {
             linesStream.forEach(inputLines::add);
         }
 
-//        for (String line: inputLines){
-//            System.out.println("Current line: " + line);
-//        }
 
+        // Add nodes to graph
         Graph graph = new Graph();
 
         for (String line: inputLines){
@@ -40,43 +38,68 @@ public class Pathfinding {
             graph.getAllNodes().add(currentNodes);
         }
 
-//        System.out.println(allNodes.get(0).size());
-//
-//        for (Node node: allNodes.get(0)){
-//            System.out.println("Name: " + node.getName() + " Value: " + node.getHeight());
-//        }
 
-
+        // Set node x, y and neighbours
         for (int row=0; row<graph.getAllNodes().size(); row++){
             for (int col=0; col<graph.getAllNodes().get(0).size(); col++){
-                graph.getAllNodes().get(row).get(col).setRowColumn(row, col);
+                Node currentNode = graph.getAllNodes().get(row).get(col);
+                currentNode.setRowColumn(row, col);
             }
         }
 
-
-
         graph.displayGraph();
-        ArrayList<Node> path = graph.dijkstraPath("S", "E");
+
+
+        ArrayList<Node> startPoints = new ArrayList<>();
+
+        for (int row=0; row<graph.getAllNodes().size(); row++) {
+            for (int col=0; col < graph.getAllNodes().get(0).size(); col++) {
+                Node currentNode = graph.getAllNodes().get(row).get(col);
+                if (currentNode.getName().equals("a")){
+                    startPoints.add(currentNode);
+                }
+            }
+        }
+
+        ArrayList<Node> bfsPath = graph.breadthFirstSearch(graph.getNodeByName("q"));
+
+        for (Node node: bfsPath){
+            System.out.println(node.getName());
+        }
+
+        int pathLength;
+        ArrayList<Node> shortestPath = new ArrayList<>();
+        int minPathLength = Integer.MAX_VALUE;
+
+//        for (Node node: startPoints) {
+//            ArrayList<Node> path = graph.dijkstraPath(node, "E");
+//            pathLength = path.size();
+//            if (pathLength < minPathLength){
+//                minPathLength = pathLength;
+//                shortestPath = path;
+//            }
+//        }
+
+        shortestPath = graph.dijkstraPath(graph.getNodeByName("S"), "E");
         StringBuilder pathStr = new StringBuilder();
-        for (Node node: path){
+        for (Node node: shortestPath){
             pathStr.append(node.getName());
             pathStr.append(", ");
         }
+
+
+
+
         long endTime = System.currentTimeMillis();
         long timeSec = (long) ((endTime - startTime) / 1000F);
         long timeMin = (long) (timeSec / 60F);
 
         System.out.println("Total execution time (seconds): " + (endTime - startTime) / 1000F);
         System.out.println("Total execution time (minutes): " + ((endTime - startTime) / 1000F) / 60F);
-        System.out.println(pathStr.toString());
-        System.out.println(path.size()-1);
+        System.out.println(pathStr);
+        System.out.println(shortestPath.size()-1);
     }
 
-    public static boolean validHeight(int nodeHeight, int neighbourHeight){
-        boolean tooHigh = neighbourHeight - nodeHeight > 1;
-        boolean tooLow = nodeHeight - neighbourHeight > 1;
-        return !(tooHigh || tooLow);
-    }
 
     public static int getAsciiValue(char character){
         int value = (int) character;
@@ -127,12 +150,14 @@ public class Pathfinding {
 
         graph.displayGraph();
 
-        for (Node node: graph.breadthFirstSearch()){
+
+
+        for (Node node: graph.breadthFirstSearch(graph.getNodes().get(0))){
             System.out.println(node.getName());
         }
         System.out.println("\n\n");
 
-        for (Node node: graph.dijkstraPath("Oxford", "Plymouth")){
+        for (Node node: graph.dijkstraPath(graph.getNodeByName("Oxford"), "Plymouth")){
             System.out.println(node.getName());
         }
 
