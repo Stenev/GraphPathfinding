@@ -3,16 +3,19 @@ import java.util.Map;
 
 public class Node {
 
+    private int id;
     private final String name;
     private final Map<Node, Integer> neighbours;
-    private Integer pathValue;
+    private final int height;
+    private int pathValue;
     private Node previous;
 
 
-    public Node(String name){
+    public Node(String name, int height){
         this.name = name;
         this.neighbours = new HashMap<>();
         this.pathValue = Integer.MAX_VALUE;
+        this.height = height;
     }
 
     public void addNeighbour(Node node, int weight){
@@ -43,5 +46,17 @@ public class Node {
 
     public void setPathValue(Integer pathValue){
         this.pathValue = pathValue;
+    }
+
+    public int getHeight(){
+        return this.height;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 }
