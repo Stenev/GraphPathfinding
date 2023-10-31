@@ -11,7 +11,8 @@ public class Pathfinding {
 
     // Advent of Code 2022 - Day 12 - Hill Climbing Algorithm
     public static void main(String[] args) throws IOException {
-        String fileName = "C:\\Dev\\Java\\Text_files\\input2.txt";
+        long startTime = System.currentTimeMillis();
+        String fileName = "C:\\Dev\\Java\\Text_files\\input.txt";
         File file = new File(fileName);
         ArrayList<String> inputLines = new ArrayList<>();
 
@@ -91,8 +92,21 @@ public class Pathfinding {
 
         graph.displayGraph();
         ArrayList<Node> path = graph.dijkstraPath("S", "E");
+        StringBuilder pathStr = new StringBuilder();
+        for (Node node: path){
+            pathStr.append(node.getName());
+            pathStr.append(", ");
+        }
+        long endTime = System.currentTimeMillis();
+        long timeSec = (long) ((endTime - startTime) / 1000F);
+        long timeMin = (long) (timeSec / 60F);
+
+        System.out.println("Total execution time (seconds): " + (endTime - startTime) / 1000F);
+        System.out.println("Total execution time (minutes): " + ((endTime - startTime) / 1000F) / 60F);
+        System.out.println(pathStr.toString());
         System.out.println(path.size()-1);
     }
+
 
     public static ArrayList<Node> findNeighbours(Node node, int[] rowColDetails){
         int currentRow = rowColDetails[0];
@@ -157,35 +171,35 @@ public class Pathfinding {
                 "Bath"
         };
 
-//        Graph graph = new Graph();
-//
-//        for (String station: stations){
-//            graph.addNode(new Node(station, 0));
-//        }
-//
-//        graph.addEdge("Oxford", "London", 60);
-//        graph.addEdge("Oxford", "Reading", 25);
-//        graph.addEdge("Oxford", "Bath", 75);
-//        graph.addEdge("London", "Reading", 40);
-//        graph.addEdge("London", "Bournemouth", 110);
-//        graph.addEdge("Bournemouth", "Plymouth", 95);
-//        graph.addEdge("Bournemouth", "Reading", 95);
-//        graph.addEdge("Plymouth", "Bristol", 50);
-//        graph.addEdge("Bristol", "Bath", 12);
-//        graph.addEdge("Bath", "Swindon", 35);
-//        graph.addEdge("Bath", "Bournemouth", 50);
-//        graph.addEdge("Bath", "Reading", 65);
-//
-//        graph.displayGraph();
-//
-//        for (Node node: graph.breadthFirstSearch()){
-//            System.out.println(node.getName());
-//        }
-//        System.out.println("\n\n");
-//
-//        for (Node node: graph.dijkstraPath("Oxford", "Plymouth")){
-//            System.out.println(node.getName());
-//        }
+        Graph graph = new Graph();
+
+        for (String station: stations){
+            graph.addNode(new Node(station, 0));
+        }
+
+        graph.addEdge("Oxford", "London", 60);
+        graph.addEdge("Oxford", "Reading", 25);
+        graph.addEdge("Oxford", "Bath", 75);
+        graph.addEdge("London", "Reading", 40);
+        graph.addEdge("London", "Bournemouth", 110);
+        graph.addEdge("Bournemouth", "Plymouth", 95);
+        graph.addEdge("Bournemouth", "Reading", 95);
+        graph.addEdge("Plymouth", "Bristol", 50);
+        graph.addEdge("Bristol", "Bath", 12);
+        graph.addEdge("Bath", "Swindon", 35);
+        graph.addEdge("Bath", "Bournemouth", 50);
+        graph.addEdge("Bath", "Reading", 65);
+
+        graph.displayGraph();
+
+        for (Node node: graph.breadthFirstSearch()){
+            System.out.println(node.getName());
+        }
+        System.out.println("\n\n");
+
+        for (Node node: graph.dijkstraPath("Oxford", "Plymouth")){
+            System.out.println(node.getName());
+        }
 
     }
 }
