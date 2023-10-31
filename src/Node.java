@@ -10,12 +10,28 @@ public class Node {
     private int pathValue;
     private Node previous;
 
+    private int row;
+    private int column;
+
 
     public Node(String name, int height){
         this.name = name;
         this.neighbours = new HashMap<>();
         this.pathValue = Integer.MAX_VALUE;
         this.height = height;
+    }
+
+    public int getRow(){
+        return this.row;
+    }
+
+    public int getColumn(){
+        return this.column;
+    }
+
+    public void setRowColumn(int row, int column){
+        this.row = row;
+        this.column = column;
     }
 
     public void addNeighbour(Node node, int weight){
