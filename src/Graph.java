@@ -8,13 +8,20 @@ import java.util.Queue;
 public class Graph {
 
     private final ArrayList<Node> nodes;
+    private int numberOfNodes;
 
     public Graph(){
         this.nodes = new ArrayList<>();
     }
 
+    public ArrayList<Node> getNodes(){
+        return this.nodes;
+    }
+
     public void addNode(Node node){
+        node.setId(numberOfNodes);
         nodes.add(node);
+        numberOfNodes++;
     }
 
     public void addEdge(Node node1, Node node2, int weight){
@@ -52,7 +59,7 @@ public class Graph {
     }
 
     public ArrayList<Node> dijkstraPath(String _startNode, String _endNode){
-        ArrayList<Node> results = new ArrayList<>();
+        ArrayList<Node> path = new ArrayList<>();
 
         ArrayList<Node> closed = new ArrayList<>();
         ArrayList<Node> open = new ArrayList<>(nodes);
@@ -95,12 +102,12 @@ public class Graph {
 
         currentNode = endNode;
         while (currentNode != null){
-            results.add(currentNode);
+            path.add(currentNode);
             currentNode = currentNode.getPrevious();
         }
 
-        Collections.reverse(results);
-        return results;
+        Collections.reverse(path);
+        return path;
     }
 
     public ArrayList<Node> breadthFirstSearch(){
