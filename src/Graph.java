@@ -106,7 +106,6 @@ public class Graph {
         }
 
         ArrayList<Node> neighbours = new ArrayList<>();
-
         Node[] neighbourNodes = new Node[4];
         // n, s, e, w
         neighbourNodes[0] = allNodes.get(northRow).get(col);
@@ -132,6 +131,7 @@ public class Graph {
 
 
     public ArrayList<Node> dijkstraPath(Node startNode, String _endNode){
+        resetGraph();
         ArrayList<Node> path = new ArrayList<>();
 
         ArrayList<Node> closed = new ArrayList<>();
@@ -192,14 +192,15 @@ public class Graph {
      * @return list of nodes in the search
      */
     public ArrayList<Node> breadthFirstSearch(Node node){
+        resetGraph();
         ArrayList<Node> results = new ArrayList<>();
         Queue<Node> queue = new LinkedList<>();
         queue.add(node);
 
         while (!queue.isEmpty()){
             Node currentNode = queue.poll();
-            findAndSetNeighbours(currentNode);
             if (!results.contains(currentNode)){
+                findAndSetNeighbours(currentNode);
                 results.add(currentNode);
                 queue.addAll(currentNode.getNeighbours().keySet());
             }
@@ -208,6 +209,7 @@ public class Graph {
     }
 
     public ArrayList<Node> depthFirstSearch(){
+        resetGraph();
         ArrayList<Node> results = new ArrayList<>();
         Stack<Node> stack = new Stack<>();
         stack.push(nodes.get(0));
@@ -215,6 +217,7 @@ public class Graph {
         while (!stack.empty()){
             Node currentNode = stack.pop();
             if (!results.contains(currentNode)){
+                findAndSetNeighbours(currentNode);
                 results.add(currentNode);
                 for (Node neighbour: currentNode.getNeighbours().keySet()){
                     if (!results.contains(neighbour)){

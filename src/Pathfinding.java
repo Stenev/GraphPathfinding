@@ -38,7 +38,7 @@ public class Pathfinding {
         }
 
 
-        // Set node x, y and neighbours
+        // Set node x, y
         for (int row=0; row<graph.getAllNodes().size(); row++){
             for (int col=0; col<graph.getAllNodes().get(0).size(); col++){
                 Node currentNode = graph.getAllNodes().get(row).get(col);
@@ -46,11 +46,9 @@ public class Pathfinding {
             }
         }
 
-        //graph.displayGraph();
 
-
+        // set starting points
         ArrayList<Node> startPoints = new ArrayList<>();
-
         for (int row=0; row<graph.getAllNodes().size(); row++) {
             for (int col=0; col < graph.getAllNodes().get(0).size(); col++) {
                 Node currentNode = graph.getAllNodes().get(row).get(col);
@@ -60,13 +58,12 @@ public class Pathfinding {
             }
         }
 
-
+        // find shortest path from starting points
         int pathLength;
         ArrayList<Node> shortestPath = new ArrayList<>();
         int minPathLength = Integer.MAX_VALUE;
 
         for (Node node: startPoints) {
-            graph.resetGraph();
             ArrayList<Node> path = graph.dijkstraPath(node, "E");
             pathLength = path.size();
             if (pathLength <= minPathLength){
@@ -75,6 +72,7 @@ public class Pathfinding {
             }
         }
 
+        //graph.resetGraph();
         //shortestPath = graph.dijkstraPath(graph.getNodeByName("S"), "E");
         StringBuilder pathStr = new StringBuilder();
         for (Node node: shortestPath){
@@ -121,7 +119,7 @@ public class Pathfinding {
     }
 
 
-    public static void graphDemo(String[] args){
+    public static void graphDemo(){
         String[] stations = {
                 "Oxford",
                 "London",
