@@ -12,14 +12,13 @@ public class Pathfinding {
     // Advent of Code 2022 - Day 12 - Hill Climbing Algorithm
     public static void main(String[] args) throws IOException {
         long startTime = System.currentTimeMillis();
-        String fileName = "C:\\Dev\\Java\\Text_files\\input2.txt";
+        String fileName = "C:\\Dev\\Java\\Text_files\\input.txt";
         File file = new File(fileName);
         ArrayList<String> inputLines = new ArrayList<>();
 
         try (Stream<String> linesStream = Files.lines(file.toPath())) {
             linesStream.forEach(inputLines::add);
         }
-
 
         // Add nodes to graph
         Graph graph = new Graph();
@@ -47,7 +46,7 @@ public class Pathfinding {
             }
         }
 
-        graph.displayGraph();
+        //graph.displayGraph();
 
 
         ArrayList<Node> startPoints = new ArrayList<>();
@@ -55,39 +54,36 @@ public class Pathfinding {
         for (int row=0; row<graph.getAllNodes().size(); row++) {
             for (int col=0; col < graph.getAllNodes().get(0).size(); col++) {
                 Node currentNode = graph.getAllNodes().get(row).get(col);
-                if (currentNode.getName().equals("a")){
+                if (currentNode.getName().equals("a") && validPath(graph, currentNode)){
                     startPoints.add(currentNode);
                 }
             }
         }
 
-        ArrayList<Node> bfsPath = graph.breadthFirstSearch(graph.getNodeByName("q"));
-
-        for (Node node: bfsPath){
-            System.out.println(node.getName());
-        }
 
         int pathLength;
         ArrayList<Node> shortestPath = new ArrayList<>();
         int minPathLength = Integer.MAX_VALUE;
 
-//        for (Node node: startPoints) {
-//            ArrayList<Node> path = graph.dijkstraPath(node, "E");
-//            pathLength = path.size();
-//            if (pathLength < minPathLength){
-//                minPathLength = pathLength;
-//                shortestPath = path;
-//            }
-//        }
+        for (Node node: startPoints) {
+            graph.resetGraph();
+            ArrayList<Node> path = graph.dijkstraPath(node, "E");
+            pathLength = path.size();
+            if (pathLength <= minPathLength){
+                minPathLength = pathLength;
+                shortestPath = path;
+            }
+        }
 
-        shortestPath = graph.dijkstraPath(graph.getNodeByName("S"), "E");
+        //shortestPath = graph.dijkstraPath(graph.getNodeByName("S"), "E");
         StringBuilder pathStr = new StringBuilder();
         for (Node node: shortestPath){
             pathStr.append(node.getName());
             pathStr.append(", ");
         }
 
-
+        System.out.println(pathStr);
+        System.out.println(shortestPath.size()-1);
 
 
         long endTime = System.currentTimeMillis();
@@ -96,10 +92,19 @@ public class Pathfinding {
 
         System.out.println("Total execution time (seconds): " + (endTime - startTime) / 1000F);
         System.out.println("Total execution time (minutes): " + ((endTime - startTime) / 1000F) / 60F);
-        System.out.println(pathStr);
-        System.out.println(shortestPath.size()-1);
     }
 
+
+    public static boolean validPath(Graph graph, Node startPoint){
+        ArrayList<Node> bfsPath = graph.breadthFirstSearch(startPoint);
+
+        for (Node node: bfsPath){
+            if (node.getName().equals("E")){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static int getAsciiValue(char character){
         int value = (int) character;
@@ -114,7 +119,6 @@ public class Pathfinding {
 
         return value;
     }
-
 
 
     public static void graphDemo(String[] args){

@@ -64,6 +64,14 @@ public class Graph {
         return null;
     }
 
+    public void resetGraph(){
+        for (Node node: nodes){
+            node.setPrevious(null);
+            node.setPathValue(Integer.MAX_VALUE);
+            node.clearNeighbours();
+        }
+    }
+
     public void findAndSetNeighbours(Node node){
         int northRow;
         int southRow;
@@ -119,7 +127,6 @@ public class Graph {
 
         for (Node neighbour: neighbours){
             node.addNeighbour(neighbour, 1);
-            //addEdge(node, neighbour, 1);
         }
     }
 
@@ -147,6 +154,7 @@ public class Graph {
             }
 
             //System.out.println("Current Node: " + currentNode.getName() + ", ID: " + currentNode.getId());
+            System.out.println(open.size());
 
             open.remove(currentNode);
             closed.add(currentNode);
@@ -186,11 +194,11 @@ public class Graph {
     public ArrayList<Node> breadthFirstSearch(Node node){
         ArrayList<Node> results = new ArrayList<>();
         Queue<Node> queue = new LinkedList<>();
-        findAndSetNeighbours(node);
         queue.add(node);
 
         while (!queue.isEmpty()){
             Node currentNode = queue.poll();
+            findAndSetNeighbours(currentNode);
             if (!results.contains(currentNode)){
                 results.add(currentNode);
                 queue.addAll(currentNode.getNeighbours().keySet());
