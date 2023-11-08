@@ -2,21 +2,25 @@
 public class Pathfinding {
 
     public static void main(String[] args){
-        String[] stations = {
-                "Oxford",
-                "London",
-                "Bournemouth",
-                "Plymouth",
-                "Reading",
-                "Swindon",
-                "Bristol",
-                "Bath"
+        String[][] stations = {
+                {"Oxford", "150", "15"},
+                {"London", "240", "100"},
+                {"Bournemouth", "130", "230"},
+                {"Plymouth", "10", "250"},
+                {"Reading", "170", "100"},
+                {"Swindon", "130", "90"},
+                {"Bristol", "80", "110"},
+                {"Bath", "95", "115"}
         };
 
         Graph graph = new Graph();
 
-        for (String station: stations){
-            graph.addNode(new Node(station));
+        for (String[] stationDetails: stations){
+            String name = stationDetails[0];
+            int x = Integer.parseInt(stationDetails[1]);
+            int y = Integer.parseInt(stationDetails[2]);
+
+            graph.addNode(new Node(name, x, y));
         }
 
         graph.addEdge("Oxford", "London", 60);
@@ -39,7 +43,7 @@ public class Pathfinding {
         }
         System.out.println("\n\n");
 
-        for (Node node: graph.dijkstraPath("Oxford", "Plymouth")){
+        for (Node node: graph.aStarSearch("Oxford", "Plymouth")){
             System.out.println(node.getName());
         }
 

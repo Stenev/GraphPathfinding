@@ -13,6 +13,15 @@ public class Graph {
         this.nodes = new ArrayList<>();
     }
 
+    public void resetGraph(){
+        for (Node node: nodes){
+            node.setPrevious(null);
+            node.setCumulativeCost(Integer.MAX_VALUE);
+            node.setDistanceToTarget(Double.MAX_VALUE);
+            node.setEstimatedCost(Double.MAX_VALUE);
+        }
+    }
+
     public void addNode(Node node){
         nodes.add(node);
     }
@@ -52,6 +61,7 @@ public class Graph {
     }
 
     public ArrayList<Node> dijkstraPath(String _startNode, String _endNode){
+        resetGraph();
         ArrayList<Node> results = new ArrayList<>();
 
         ArrayList<Node> closed = new ArrayList<>();
@@ -60,13 +70,13 @@ public class Graph {
         Node endNode = getNodeByName(_endNode);
         Node currentNode = null;
 
-        startNode.setPathValue(0);
+        startNode.setCumulativeCost(0);
         int currentPathValue;
 
         while (!closed.contains(endNode)){
             int minPathValue = Integer.MAX_VALUE;
             for (Node node: open){
-                currentPathValue = node.getPathValue();
+                currentPathValue = node.getCumulativeCost();
                 if (currentPathValue < minPathValue){
                     currentNode = node;
                     minPathValue = currentPathValue;
@@ -82,9 +92,69 @@ public class Graph {
                     if (open.contains(neighbour.getKey())){
                         Node neighbourNode = neighbour.getKey();
                         int edgeWeight = neighbour.getValue();
-                        combinedPathValue = currentNode.getPathValue() + edgeWeight;
-                        if (combinedPathValue < neighbourNode.getPathValue()){
-                            neighbourNode.setPathValue(combinedPathValue);
+                        combinedPathValue = currentNode.getCumulativeCost() + edgeWeight;
+                        if (combinedPathValue < neighbourNode.getCumulativeCost()){
+                            neighbourNode.setCumulativeCost(combinedPathValue);
+                            neighbourNode.setPrevious(currentNode);
+                        }
+                    }
+                }
+            }
+        }
+
+        currentNode = endNode;
+        while (currentNode != null){
+            results.add(currentNode);
+            currentNode = currentNode.getPrevious();
+        }
+
+        Collections.reverse(results);
+        return results;
+    }
+
+
+    public ArrayList<Node> aStarSearch(String _startNode, String _endNode){
+        resetGraph();
+        ArrayList<Node> results = new ArrayList<>();
+
+        ArrayList<Node> closed = new ArrayList<>();
+        ArrayList<Node> open = new ArrayList<>(nodes);
+        Node startNode = getNodeByName(_startNode);
+        Node endNode = getNodeByName(_endNode);
+        int endX = endNode.getX();
+        int endY = endNode.getY();
+
+        startNode.setCumulativeCost(0);
+
+        double currentPathValue;
+        Node currentNode = null;
+        while (!closed.contains(endNode)){
+            double minPathValue = Double.MAX_VALUE;
+            for (Node node: open){
+                if (node.getDistanceToTarget() == Double.MAX_VALUE) {
+                    node.calcDistanceToTarget(endX, endY);
+                    node.setEstimatedCost();
+                }
+                currentPathValue = node.getEstimatedCost();
+                if (currentPathValue < minPathValue){
+                    currentNode = node;
+                    minPathValue = currentPathValue;
+                }
+            }
+
+            open.remove(currentNode);
+            closed.add(currentNode);
+
+            int combinedPathValue;
+            if (currentNode != endNode){
+                for (Map.Entry<Node, Integer> neighbour: currentNode.getNeighbours().entrySet()){
+                    if (open.contains(neighbour.getKey())){
+                        Node neighbourNode = neighbour.getKey();
+                        int edgeWeight = neighbour.getValue();
+                        combinedPathValue = currentNode.getCumulativeCost() + edgeWeight;
+                        if (combinedPathValue < neighbourNode.getCumulativeCost()){
+                            neighbourNode.setCumulativeCost(combinedPathValue);
+                            neighbourNode.setEstimatedCost();
                             neighbourNode.setPrevious(currentNode);
                         }
                     }
